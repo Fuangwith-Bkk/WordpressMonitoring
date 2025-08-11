@@ -36,7 +36,7 @@ jobs:
       - name: Check weddingmc.in.th for text
         id: weddingmc_check
         run: |
-          if curl -s 'https://weddingmc.in.th' | grep -q 'อัญชุลี โสภารัตน์'; then
+          if curl -s 'https://weddingmc.in.th/about-2/' | grep -q 'อัญชุลี โสภารัตน์'; then
             echo "Weddingmc check successful."
           else
             echo "Weddingmc check FAILED. 'อัญชุลี โสภารัตน์' not found."
