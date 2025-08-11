@@ -17,7 +17,7 @@ jobs:
         run: |
           # Use curl to get the HTML content and check for the string
           # grep -q returns exit code 0 if the pattern is found, 1 if not.
-          if curl -s 'https://kuapa.com' | grep -q 'กั่วป่า (Kuapa)'; then
+          if curl -s 'https://kuapa.com' | grep -q 'กั่วป่า ( Kuapa)'; then
             echo "Kuapa.com is healthy."
           else
             echo "Kuapa.com is down."
@@ -36,7 +36,7 @@ jobs:
       - name: Check weddingmc.in.th for text
         id: weddingmc_check
         run: |
-          if curl -s 'https://weddingmc.in.th/about-2/' | grep -q 'อัญชุลี+ โสภารัตน์'; then
+          if curl -s 'https://weddingmc.in.th/about-2/' | grep -q 'อัญชุลี โสภารัตน์'; then
             echo "Weddingmc is healthy."
           else
             echo "Weddingmc is down."
