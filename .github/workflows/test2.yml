@@ -3,7 +3,7 @@ name: Test Cron Schedule
 on:
   schedule:
     - cron: '*/5 * * * *'  # Every 5 minutes
-  # workflow_dispatch:  # Allow manual trigger for testing
+   workflow_dispatch:  # Allow manual trigger for testing
 
 jobs:
   test-cron:
