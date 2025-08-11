@@ -2,7 +2,7 @@ name: Website Monitor
 
 on:
   schedule:
-    - cron: '* * * * *' # This will run every 5 minutes
+    - cron: '0 * * * *' # hourly
   # workflow_dispatch:
 
 jobs:
@@ -12,12 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Check kuapa.com for text
+      - name: health check kuapa.com 
         id: kuapa_check
         run: |
           # Use curl to get the HTML content and check for the string
           # grep -q returns exit code 0 if the pattern is found, 1 if not.
-          if curl -s 'https://kuapa.com' | grep -q 'กั่วป่า ( Kuapa)'; then
+          if curl -s 'https://kuapa.com' | grep -q 'กั่วป่า (+Kuapa)'; then
             echo "Kuapa.com is healthy."
           else
             echo "Kuapa.com is down."
@@ -33,10 +33,10 @@ jobs:
             -H 'Authorization: Bearer ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}' \
             -d "$MESSAGE"
       
-      - name: Check weddingmc.in.th for text
+      - name: health check weddingmc.in.th
         id: weddingmc_check
         run: |
-          if curl -s 'https://weddingmc.in.th/about-2/' | grep -q 'อัญชุลี โสภารัตน์'; then
+          if curl -s 'https://weddingmc.in.th/about-2/' | grep -q 'อัญชุลี +โสภารัตน์'; then
             echo "Weddingmc is healthy."
           else
             echo "Weddingmc is down."
