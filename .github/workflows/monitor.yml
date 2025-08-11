@@ -1,0 +1,53 @@
+name: Website Monitor
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs once a day at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  monitor_websites:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check kuapa.com for text
+        id: kuapa_check
+        run: |
+          # Use curl to get the HTML content and check for the string
+          # grep -q returns exit code 0 if the pattern is found, 1 if not.
+          if curl -s 'https://kuapa.com' | grep -q 'กั่วป่า (Kuapa)'; then
+            echo "Kuapa check successful."
+          else
+            echo "Kuapa check FAILED. 'กั่วป่า (Kuapa)' not found."
+            exit 1
+          fi
+      
+      - name: Send LINE alert for kuapa.com failure
+        if: failure() && steps.kuapa_check.conclusion == 'failure'
+        run: |
+          MESSAGE='{"to":"${{ secrets.LINE_USER_ID }}","messages":[{"type":"text","text":"Alert: The text ''กั่วป่า (Kuapa)'' was not found on kuapa.com."}]}'
+          curl -X POST https://api.line.me/v2/bot/message/push \
+            -H 'Content-Type: application/json' \
+            -H 'Authorization: Bearer ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}' \
+            -d "$MESSAGE"
+      
+      - name: Check weddingmc.in.th for text
+        id: weddingmc_check
+        run: |
+          if curl -s 'https://weddingmc.in.th' | grep -q 'อัญชุลี โสภารัตน์'; then
+            echo "Weddingmc check successful."
+          else
+            echo "Weddingmc check FAILED. 'อัญชุลี โสภารัตน์' not found."
+            exit 1
+          fi
+          
+      - name: Send LINE alert for weddingmc.in.th failure
+        if: failure() && steps.weddingmc_check.conclusion == 'failure'
+        run: |
+          MESSAGE='{"to":"${{ secrets.LINE_USER_ID }}","messages":[{"type":"text","text":"Alert: The text ''อัญชุลี โสภารัตน์'' was not found on weddingmc.in.th."}]}'
+          curl -X POST https://api.line.me/v2/bot/message/push \
+            -H 'Content-Type: application/json' \
+            -H 'Authorization: Bearer ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}' \
+            -d "$MESSAGE"
