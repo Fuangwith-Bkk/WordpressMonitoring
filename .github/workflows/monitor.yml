@@ -3,7 +3,7 @@ name: Website Monitor
 on:
   schedule:
     - cron: '* * * * *' # This will run every 5 minutes
-  workflow_dispatch:
+  # workflow_dispatch:
 
 jobs:
   monitor_websites:
